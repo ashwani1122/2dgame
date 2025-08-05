@@ -21,8 +21,11 @@ export const adminMiddleware = (
     if (decoded.role !== "Admin") {
       return res.status(403).json({ message: "Forbidden" });
     }
+    console.log("request reached here");
     req.userId = decoded.userId;
+
     next();
+        console.log("next function call");
   } catch (error) {
     console.error("Error verifying token:", error);
     return res.status(401).json({ message: "Invalid token" });

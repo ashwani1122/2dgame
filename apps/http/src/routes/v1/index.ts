@@ -78,8 +78,7 @@ router.post("/signin", async (req: Request, res: Response) => {
       userId: user.id,
       role: user.role,
     },
-    JWT_SECRET,
-  );
+    JWT_SECRET);
 
   res.status(200).json({
     message: "User signed in successfully",

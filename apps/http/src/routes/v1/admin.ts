@@ -33,9 +33,6 @@ adminRouter.post("/element",adminMiddleware, async (req, res) => {
             error: error instanceof Error ? error.message : "Unknown error",
         });
     }
-    res.status(501).json({
-        message: "Admin element creation not implemented yet",
-    });
 });
 adminRouter.put("/element/:elementId",adminMiddleware, async (req, res) => {
         

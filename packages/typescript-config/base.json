@@ -2,6 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "declaration": true,
+     "baseUrl": ".",
+    "paths": {
+      "@repo/db/*": ["packages/db/src/*"]
+    },
     "declarationMap": true,
     "esModuleInterop": true,
     "incremental": false,

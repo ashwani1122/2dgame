@@ -6,7 +6,6 @@ import {
 } from "src/types";
 import client from "@repo/db/client";
 import { userMiddleware } from "src/middleware/user";
-import { tr } from "zod/locales";
 
 export const spaceRouter = Router();
 
