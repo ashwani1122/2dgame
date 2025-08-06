@@ -5,8 +5,8 @@
   "scripts": {
     "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --tsconfig=tsconfig.json",
     "start": "node dist/index.js",
-    "dev":"npm run build && node dist/index.js",
-     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev": "npm run build && node dist/index.js",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "eslint . --ext .ts,.tsx",
     "check-types": "tsc --noEmit"
   },
@@ -17,9 +17,11 @@
   "dependencies": {
     "@repo/db": "*",
     "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "tsconfig-paths": "^4.2.0",
