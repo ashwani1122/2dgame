@@ -63,7 +63,6 @@ spaceRouter.post("/", userMiddleware, async (req, res) => {
         y: element.y!,
       })),
     });
-
     return space;
   });
 
@@ -120,7 +119,7 @@ spaceRouter.get("/all", userMiddleware, async (req, res) => {
   });
 });
 
-spaceRouter.post("/element", async (req, res) => {
+spaceRouter.post("/element",userMiddleware,async (req, res) => {
   const parsedData = AddElementSchema.safeParse(req.body);
   if (!parsedData.success) {
     return res.status(400).json({
