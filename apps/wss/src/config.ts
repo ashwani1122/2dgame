@@ -1,2 +1,2 @@
 
-export const JWT_PASSWORD = "123kasdk123"
+export const JWT_PASSWORD = "your_jwt_secret"

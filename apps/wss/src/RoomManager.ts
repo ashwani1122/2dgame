@@ -31,6 +31,7 @@ export class RoomManager {
     }
 
     public broadcast(message: OutgoingMessage, user: User, roomId: string) {
+        console.log("broadcast received")
         if (!this.rooms.has(roomId)) {
             return;
         }
