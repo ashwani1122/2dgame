@@ -1,9 +1,10 @@
 import { WebSocket } from "ws";
 import { RoomManager } from "./RoomManager";
+import { OutgoingMessage } from "./types";
 import client from "@repo/db/client";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_PASSWORD } from "./config";
-import { OutgoingMessage } from "./types";
+
 function getRandomString(length: number) {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
@@ -12,6 +13,7 @@ function getRandomString(length: number) {
     }
     return result;
 }
+
 export class User {
     public id: string;
     public userId?: string;
@@ -19,6 +21,7 @@ export class User {
     private x: number;
     private y: number;
     private ws: WebSocket;
+
     constructor(ws: WebSocket) {
         this.id = getRandomString(10);
         this.x = 0;
@@ -26,18 +29,16 @@ export class User {
         this.ws = ws;
         this.initHandlers()
     }
+
     initHandlers() {
         this.ws.on("message", async (data) => {
-            console.log("this is data : ")
             console.log(data)
             const parsedData = JSON.parse(data.toString());
-            console.log("from here")
             console.log(parsedData)
-            console.log("parsedData");
-            console.log("from here 2");
+            console.log("parsedData")
             switch (parsedData.type) {
                 case "join":
-                    console.log("jouin receiverdfd");
+                    console.log("jouin receiverdfd")
                     const spaceId = parsedData.payload.spaceId;
                     const token = parsedData.payload.token;
                     const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId
@@ -60,35 +61,27 @@ export class User {
                     console.log("jouin receiverdfd 4")
                     this.spaceId = spaceId
                     RoomManager.getInstance().addUser(spaceId, this);
-                    this.x = Math.floor(Math.random() * space?.width);
-                    this.y = Math.floor(Math.random() * space?.height);
+                    this.x = Math.floor(Math.random() );
+                    this.y = Math.floor(Math.random());
                     this.send({
-                    type: "space-joined",
-                    payload: {
-                        spawn: {
-                        x: this.x,
-                        y: this.y
-                        },
-                        users: RoomManager.getInstance().rooms.get(spaceId)
-                        ?.filter(x => x.id !== this.id)
-                        .map((u) => ({
-                            id: u.id,
-                            x: u.x,
-                            y: u.y
-                        })) ?? []
-                    }
+                        type: "space-joined",
+                        payload: {
+                            spawn: {
+                                x: this.x,
+                                y: this.y
+                            },
+                            users: RoomManager.getInstance().rooms.get(spaceId)?.filter(x => x.id !== this.id)?.map((u) => ({id: u.id})) ?? []
+                        }
                     });
-
-                    console.log("join receiverdf5")
+                    console.log("jouin receiverdf5")
                     RoomManager.getInstance().broadcast({
-                    type: "user-joined",
-                    payload: {
-                        id: this.id,
-                        x: this.x,
-                        y: this.y
-                    }
+                        type: "user-joined",
+                        payload: {
+                            userId: this.userId,
+                            x: this.x,
+                            y: this.y
+                        }
                     }, this, this.spaceId!);
-
                     break;
                 case "move":
                     const moveX = parsedData.payload.x;
@@ -101,7 +94,6 @@ export class User {
                         RoomManager.getInstance().broadcast({
                             type: "movement",
                             payload: {
-                                userId: this.id,
                                 x: this.x,
                                 y: this.y
                             }
@@ -116,6 +108,7 @@ export class User {
                             y: this.y
                         }
                     });
+                    
             }
         });
     }

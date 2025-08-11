@@ -8,9 +8,7 @@ import { SigninSchema, SignupSchema } from "src/types/index.js";
 import { userRouter } from "./user.js";
 import { adminRouter } from "./admin.js";
 import { spaceRouter } from "./space.js";
-
 export const router = Router();
-
 router.post("/signup", async (req: Request, res: Response) => {
   const parsedData = SignupSchema.safeParse(req.body);
   if (!parsedData.success) {
@@ -85,7 +83,6 @@ router.post("/signin", async (req: Request, res: Response) => {
     token: token,
   });
 });
-
 router.get("/elements", async (req: Request, res: Response) => {
     const elements = await client.element.findMany();
     res.status(200).json({elements : elements.map((element) => ({
@@ -96,7 +93,6 @@ router.get("/elements", async (req: Request, res: Response) => {
     static: element.static,
     }))});
 });
-
 router.get("/avatars", async (req: Request, res: Response) => {
     const avatars = await client.avatar.findMany();
     res.status(200).json({
@@ -108,7 +104,5 @@ router.get("/avatars", async (req: Request, res: Response) => {
     });
 });
 router.use("/user", userRouter);
-
 router.use("/admin", adminRouter);
-
 router.use("/space", spaceRouter);

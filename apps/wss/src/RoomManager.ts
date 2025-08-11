@@ -1,13 +1,14 @@
+import type { User } from "./User";
 import { OutgoingMessage } from "./types";
-import { User } from "./User";
 
 export class RoomManager {
     rooms: Map<string, User[]> = new Map();
     static instance: RoomManager;
+
     private constructor() {
         this.rooms = new Map();
     }
-    
+
     static getInstance() {
         if (!this.instance) {
             this.instance = new RoomManager();
@@ -31,7 +32,6 @@ export class RoomManager {
     }
 
     public broadcast(message: OutgoingMessage, user: User, roomId: string) {
-        console.log("broadcast received")
         if (!this.rooms.has(roomId)) {
             return;
         }
