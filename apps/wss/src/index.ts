@@ -1,14 +1,29 @@
-import { WebSocketServer } from 'ws';
-import { User } from './User';
+import { WebSocketServer, WebSocket } from "ws";
+import { User } from "./User";
 
 const wss = new WebSocketServer({ port: 3001 });
 
-wss.on('connection', function connection(ws) {
-  console.log("yser connected")
-  let user = new User(ws);
-  ws.on('error', console.error);
+wss.on("connection", (ws) => {
+  const user = new User(ws);
 
-  ws.on('close', () => {
-    user?.destroy();
+  const interval = setInterval(() => {
+    if (ws.readyState === WebSocket.OPEN) {
+      try {
+        ws.ping();
+      } catch {}
+    }
+  }, 30000);
+
+  ws.on("close", () => {
+    clearInterval(interval);
+    user.destroy();
+  });
+
+  ws.on("error", () => {
+    try {
+      ws.close();
+    } catch {}
   });
 });
+
+console.log("ws://localhost:3001");
