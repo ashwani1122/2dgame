@@ -37,7 +37,7 @@ export class RoomManager {
 
     broadcast(message: OutgoingMessage, exclude: User | null, spaceId: string) {
         const set = this.rooms.get(spaceId);
-        // alert(set);
+        console.log("this is set :")
         console.log("this is set :")
         console.log(typeof set);
         // alert(typeof set);
