@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebRTC Demo</title>
+</head>
+<body>
+    <h1>Simple WebRTC Video Call</h1>
+    <video id="localVideo" autoplay playsinline muted></video>
+    <video id="remoteVideo" autoplay playsinline></video>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const peer = new RTCPeerConnection();
+        const localVideo = document.getElementById("localVideo");
+        const remoteVideo = document.getElementById("remoteVideo");
+
+        // Show remote stream when received
+        peer.ontrack = (event) => {
+        remoteVideo.srcObject = event.streams[0];
+        };
+
+        // Send ICE candidates to peer
+        peer.onicecandidate = (event) => {
+        if (event.candidate) {
+            socket.emit("ice", event.candidate);
+        }
+        };
+
+        // Get media
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+            localVideo.srcObject = stream;
+            stream.getTracks().forEach(track => peer.addTrack(track, stream));
+        });
+
+        // Handle signals
+        socket.on("offer", async (offer) => {
+        await peer.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
+        socket.emit("answer", answer);
+        });
+
+        socket.on("answer", async (answer) => {
+        await peer.setRemoteDescription(new RTCSessionDescription(answer));
+        });
+
+        socket.on("ice", async (candidate) => {
+        try {
+            await peer.addIceCandidate(candidate);
+        } catch (e) {
+            console.error("Error adding ICE candidate", e);
+        }
+        });
+
+        // Start call (only first tab creates offer)
+        async function startCall() {
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socket.emit("offer", offer);
+        }
+
+        // Wait a few seconds, then try to start the call
+        setTimeout(startCall, 2000);
+    </script>
+</body>
+</html>
