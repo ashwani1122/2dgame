@@ -30,6 +30,7 @@
     "zod": "^4.0.14"
   },
   "devDependencies": {
+    "esbuild": "^0.25.9",
     "tsc-alias": "^1.8.16"
   }
 }
